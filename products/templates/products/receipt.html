@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Receipt - Order #{{ order.id }}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+        .receipt {
+            max-width: 420px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 28px;
+            color: #222;
+        }
+        .shop-name {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .shop-sub {
+            text-align: center;
+            color: #888;
+            font-size: 0.85rem;
+            margin: 4px 0 16px 0;
+        }
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        .divider {
+            border: none;
+            border-top: 1px dashed #bbb;
+            margin: 14px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        th {
+            text-align: left;
+            font-size: 0.8rem;
+            color: #888;
+            font-weight: 600;
+            padding-bottom: 6px;
+        }
+        td {
+            padding: 6px 0;
+        }
+        .right {
+            text-align: right;
+        }
+        .center {
+            text-align: center;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .thanks {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 18px;
+        }
+        .actions {
+            max-width: 420px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-print {
+            background-color: #2e7d32;
+            color: white;
+        }
+        .btn-back {
+            background-color: #fff;
+            color: #2e7d32;
+            border: 1px solid #2e7d32;
+        }
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+            .receipt {
+                box-shadow: none;
+                margin: 0 auto;
+            }
+            .actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="receipt">
+        <h2 class="shop-name">Smart Self Checkout</h2>
+        <p class="shop-sub">Retail Store Receipt</p>
+
+        <div class="meta"><span>Order No</span><span>#{{ order.id }}</span></div>
+        <div class="meta"><span>Date</span><span>{{ order.created_at|date:"d M Y, h:i A" }}</span></div>
+
+        <hr class="divider">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th class="center">Qty</th>
+                    <th class="right">Price</th>
+                    <th class="right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in lines %}
+                <tr>
+                    <td>{{ line.name }}</td>
+                    <td class="center">{{ line.qty }}</td>
+                    <td class="right">₹{{ line.price }}</td>
+                    <td class="right">₹{{ line.subtotal }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <hr class="divider">
+
+        <div class="total-row">
+            <span>Total</span>
+            <span>₹{{ order.total_amount }}</span>
+        </div>
+
+        <hr class="divider">
+
+        <p class="thanks">Thank you for shopping with us!</p>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-print" onclick="window.print()">🖨️ Print / Save PDF</button>
+        <a class="btn btn-back" href="{% url 'checkout_page' %}">New Order</a>
+    </div>
+
+</body>
+</html>

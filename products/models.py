@@ -6,6 +6,7 @@ import qrcode
 class Product(models.Model):
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    stock = models.PositiveIntegerField(default=0)
     qr_code = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
 
     def __str__(self):
